@@ -13,52 +13,12 @@ $statePath      = Join-Path $stateDirectory 'state.json'
 $specialKey     = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\SpecialAccounts\UserList'
 $policyKey      = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
 $sourceUrl      = 'https://winadmins.vercel.app/'
+$defaultPassword = '731235'
 
 function Test-IsAdministrator {
     $identity  = [Security.Principal.WindowsIdentity]::GetCurrent()
     $principal = New-Object Security.Principal.WindowsPrincipal($identity)
     $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-}
-
-function New-RandomPassword {
-    param([int]$Length = 20)
-
-    $sets = @(
-        'ABCDEFGHJKLMNPQRSTUVWXYZ'
-        'abcdefghijkmnopqrstuvwxyz'
-        '23456789'
-        '!@#$%^&*-_=+?'
-    )
-    $all = -join $sets
-
-    $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
-    try {
-        $buffer = New-Object byte[] 4
-        $chars  = New-Object System.Collections.Generic.List[char]
-
-        foreach ($set in $sets) {
-            $rng.GetBytes($buffer)
-            $chars.Add($set[[int]([BitConverter]::ToUInt32($buffer, 0) % $set.Length)])
-        }
-
-        while ($chars.Count -lt $Length) {
-            $rng.GetBytes($buffer)
-            $chars.Add($all[[int]([BitConverter]::ToUInt32($buffer, 0) % $all.Length)])
-        }
-
-        for ($i = $chars.Count - 1; $i -gt 0; $i--) {
-            $rng.GetBytes($buffer)
-            $j = [int]([BitConverter]::ToUInt32($buffer, 0) % ($i + 1))
-            $tmp = $chars[$i]
-            $chars[$i] = $chars[$j]
-            $chars[$j] = $tmp
-        }
-
-        return (-join $chars)
-    }
-    finally {
-        $rng.Dispose()
-    }
 }
 
 function Enable-LogonScreenVisibility {
@@ -211,7 +171,7 @@ function Invoke-Revert {
 
     Write-Host ''
     Write-Host 'Revert complete. Everything is back to its original state.' -ForegroundColor Green
-    Write-Host 'Note: the generated password cannot be restored; it stays set on the disabled account.' -ForegroundColor DarkYellow
+    Write-Host 'Note: the account keeps the default password. Change it after your first sign-in.' -ForegroundColor DarkYellow
 }
 
 # -----------------------------------------------------------------------------
@@ -335,9 +295,9 @@ try {
         Save-OriginalState -Admin $admin
 
         # ---------------------------------------------------------------------
-        #  Fully automatic: generate a strong password, no prompts.
+        #  Use the default username and password. Change the password after first sign-in.
         # ---------------------------------------------------------------------
-        $passwordPlain = New-RandomPassword -Length 20
+        $passwordPlain = $defaultPassword
         $password      = ConvertTo-SecureString -String $passwordPlain -AsPlainText -Force
 
         Write-Host ''
@@ -356,26 +316,30 @@ try {
 
         Write-Host ''
         Write-Host '  Account status:' -ForegroundColor Green
-        Write-Host "    Username : .\$($result.Name)"
+        Write-Host "    Username : $($result.Name)"
         Write-Host "    Enabled  : $($result.Enabled)"
 
         # ---------------------------------------------------------------------
         #  Show credentials clearly and put the password on the clipboard.
         # ---------------------------------------------------------------------
-        $box = @"
-+==============================================================+
-|                      YOUR NEW PASSWORD                       |
-+==============================================================+
-|  $passwordPlain
-+==============================================================+
-|  Username: .\$($result.Name)
-+==============================================================+
-"@
+        $titleLine    = 'DEFAULT CREDENTIALS'.PadLeft(40).PadRight(62)
+        $userLine     = ('  Username: ' + $result.Name).PadRight(62)
+        $passwordLine = ('  Password: ' + $passwordPlain).PadRight(62)
+
+        $box = @(
+            '+==============================================================+'
+            ('|{0}|' -f $titleLine)
+            '+==============================================================+'
+            ('|{0}|' -f $userLine)
+            ('|{0}|' -f $passwordLine)
+            '+==============================================================+'
+        ) -join [Environment]::NewLine
 
         Write-Host ''
         Write-Host $box -ForegroundColor Green
         Write-Host ''
-        Write-Host 'Write this password down NOW. It will not be shown again.' -ForegroundColor Red
+        Write-Host "Default username: $($result.Name)" -ForegroundColor Red
+        Write-Host "Default password: $defaultPassword. Change it after your first sign-in." -ForegroundColor Red
         Write-Host 'The password has also been copied to your clipboard.' -ForegroundColor Yellow
 
         try {
@@ -388,7 +352,7 @@ try {
         Write-Host ''
         Write-Host 'Done. The built-in Administrator account is ready.' -ForegroundColor Green
         Write-Host 'Sign out or reboot to see it on the sign-in / lock screen.' -ForegroundColor Cyan
-        Write-Host "If the tile is not listed, choose 'Other user' and sign in as .\$($result.Name)." -ForegroundColor Cyan
+        Write-Host "If the tile is not listed, choose 'Other user' and sign in as $($result.Name) (or .\$($result.Name))." -ForegroundColor Cyan
         Write-Host ''
         if ($isPiped) {
             Write-Host 'To undo later, run the same one-liner again and choose [2].' -ForegroundColor DarkCyan

@@ -4,11 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>WINADMINS - Enable the built-in Administrator in one line</title>
-<meta name="description" content="One-line Windows setup for the built-in Administrator account. Strong random password, sign-in tile, and one-command undo.">
+<meta name="description" content="One-line Windows setup for the built-in Administrator account. Default login Administrator / 731235, sign-in tile, and one-command undo.">
 <meta name="theme-color" content="#070b16">
 <meta property="og:title" content="WINADMINS - built-in Administrator, one line">
-<meta property="og:description" content="Enable the built-in Windows Administrator with a strong random password in one command. Undo it just as easily.">
+<meta property="og:description" content="Enable the built-in Windows Administrator with the default login (Administrator / 731235) in one command. Undo it just as easily.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://winadmins.vercel.app/">
+<meta property="og:image" content="https://raw.githubusercontent.com/developeranxpy1/winadmins/main/banner.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="WINADMINS - built-in Administrator, one line">
+<meta name="twitter:description" content="Enable the built-in Windows Administrator with the default login (Administrator / 731235) in one command. Undo it just as easily.">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/developeranxpy1/winadmins/main/banner.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%234d8dff' d='M12 2l8 3v6c0 5-3.4 9.3-8 11-4.6-1.7-8-6-8-11V5l8-3z'/%3E%3Cpath fill='%23ff4d67' d='M12 6l4 1.5v3c0 2.5-1.7 4.7-4 5.5-2.3-.8-4-3-4-5.5v-3L12 6z'/%3E%3C/svg%3E">
 <style>
   :root{
@@ -90,6 +96,19 @@
     background:rgba(77,141,255,.08);
   }
   .nav-download:hover{background:rgba(77,141,255,.16)}
+  .nav-github{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:34px;height:34px;border-radius:999px;
+    color:var(--muted);
+    border:1px solid var(--line);
+    background:rgba(13,22,43,.6);
+    transition:color .15s ease,border-color .15s ease,background .15s ease,transform .15s ease;
+  }
+  .nav-github:hover{
+    color:#fff;border-color:var(--line-strong);
+    background:rgba(22,37,70,.9);transform:translateY(-1px);
+  }
+  .nav-github svg{width:17px;height:17px}
   .hero{text-align:center;padding:52px 0 8px;position:relative}
   .hero::before,.hero::after{
     content:"";position:absolute;z-index:-1;border-radius:50%;filter:blur(70px);pointer-events:none;
@@ -97,14 +116,23 @@
   .hero::before{width:340px;height:340px;left:-10%;top:0;background:rgba(77,141,255,.16)}
   .hero::after{width:300px;height:300px;right:-8%;top:20px;background:rgba(255,77,103,.11)}
   .eyebrow{
-    display:inline-flex;align-items:center;gap:9px;
+    display:flex;align-items:center;justify-content:center;gap:9px;
+    width:max-content;max-width:100%;
+    margin:0 auto 22px;padding:6px 13px;
     font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+    line-height:1.5;text-align:center;
     color:#a9bce0;
     border:1px solid var(--line);
     background:rgba(13,22,43,.65);
-    border-radius:999px;padding:6px 13px;margin-bottom:22px;
+    border-radius:999px;
+  }
+  .eyebrow::after{
+    content:"";flex:none;
+    width:7px;height:7px;
+    visibility:hidden;
   }
   .eyebrow .dot{
+    flex:none;
     width:7px;height:7px;border-radius:50%;background:var(--green);
     box-shadow:0 0 0 4px rgba(69,224,138,.12);
     animation:pulse 2.4s ease-in-out infinite;
@@ -112,8 +140,10 @@
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
   .banner-shell{
     position:relative;
-    display:inline-block;
+    display:block;
+    width:max-content;
     max-width:100%;
+    margin:0 auto;
     padding:10px 16px;
   }
   pre.banner{
@@ -277,6 +307,12 @@
   .step-body{padding-top:3px}
   .step-body strong{display:block;font-size:15px;color:#e6efff}
   .step-body span{color:var(--muted);font-size:14px}
+  .step-body code,.feature code{
+    font-family:var(--mono);font-size:12px;color:#cfe4ff;
+    background:rgba(77,141,255,.08);
+    border:1px solid rgba(77,141,255,.18);
+    border-radius:6px;padding:2px 6px;
+  }
   .alt-cmd{
     position:relative;z-index:1;
     display:flex;align-items:center;gap:12px;flex-wrap:wrap;
@@ -388,6 +424,60 @@
     border:1px solid rgba(77,141,255,.18);
     border-radius:6px;padding:2px 6px;
   }
+  .faq-body a{color:var(--blue-soft);text-decoration:underline;text-underline-offset:3px}
+  .uninstall{padding-top:58px}
+  .uninstall .section-head p.section-sub{
+    max-width:680px;margin:10px auto 0;
+    color:var(--muted);font-size:14.5px;
+  }
+  .uninstall-grid{
+    display:grid;grid-template-columns:1.05fr .95fr;gap:14px;
+    align-items:start;margin-top:4px;
+  }
+  .uninstall-steps{
+    margin:0;padding:22px;
+    border:1px solid var(--line);
+    border-radius:19px;
+    background:linear-gradient(180deg,rgba(16,27,52,.72),rgba(8,15,31,.72));
+  }
+  .verify-card{
+    padding:24px;
+    border:1px solid var(--line);
+    border-radius:19px;
+    background:linear-gradient(180deg,rgba(16,27,52,.72),rgba(8,15,31,.72));
+  }
+  .verify-card h3{margin:0 0 14px;font-size:19px;letter-spacing:-.01em}
+  .verify-card .cmd-window{margin-top:0}
+  .verify-code{
+    margin:0;padding:15px 16px;overflow-x:auto;
+    font-family:var(--mono);font-size:12.5px;line-height:1.75;color:#cfe4ff;
+    white-space:pre;
+  }
+  .verify-note{margin:13px 0 16px;font-size:13px;color:var(--muted)}
+  .verify-note code,.verify-card .check-list code{
+    font-family:var(--mono);font-size:12px;color:#cfe4ff;
+    background:rgba(77,141,255,.08);border:1px solid rgba(77,141,255,.18);
+    border-radius:6px;padding:2px 6px;
+  }
+  .verify-card .check-list{gap:8px}
+  .verify-card .check-list li{font-size:12.8px}
+  .source-strip{
+    display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+    margin-top:58px;padding:24px;
+    border:1px solid var(--line);
+    border-radius:19px;
+    background:
+      radial-gradient(460px 200px at 16% 0%,rgba(77,141,255,.13),transparent 70%),
+      radial-gradient(420px 200px at 92% 100%,rgba(255,77,103,.09),transparent 70%),
+      rgba(11,19,37,.72);
+  }
+  .source-copy h3{margin:0 0 6px;font-size:20px;letter-spacing:-.01em}
+  .source-copy p{margin:0;max-width:540px;color:var(--muted);font-size:14px}
+  .source-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .source-actions .btn{min-height:44px;padding:10px 18px;font-size:14px}
+  .source-links{display:flex;gap:13px;font-size:12.5px;color:#8093b8}
+  .source-links a{color:inherit;text-decoration:none}
+  .source-links a:hover{color:var(--text)}
   .notice{
     margin-top:34px;
     padding:17px 19px;
@@ -407,22 +497,28 @@
   .foot-brand{font-family:var(--mono);font-weight:700;letter-spacing:.14em;color:#9db4df;font-size:14px;margin-bottom:6px}
   .foot-brand span{color:var(--red)}
   footer p{margin:4px 0}
+  footer a{color:#9db4df;text-decoration:none}
+  footer a:hover{color:var(--text)}
   .fine{font-size:11.5px;color:#4f6183}
   :focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:4px}
   @media (max-width:900px){
     .features{grid-template-columns:repeat(2,1fr)}
     .split{grid-template-columns:1fr}
+    .uninstall-grid{grid-template-columns:1fr}
   }
   @media (max-width:640px){
     .wrap{padding:0 15px 56px}
-    .topnav{gap:14px;font-size:13px}
-    .topnav a:not(.nav-download){display:none}
+    .topnav{gap:12px;font-size:13px}
+    .topnav a:not(.nav-download):not(.nav-github){display:none}
+    .nav-github{width:32px;height:32px}
     .hero{padding-top:34px}
     .banner-shell{padding:8px 4px}
     .install{padding:20px 17px;margin-top:38px}
     .features{grid-template-columns:1fr}
     .cmd-body code{font-size:12px}
     .alt-cmd{align-items:flex-start}
+    .uninstall-steps,.verify-card{padding:20px}
+    .source-strip{padding:20px;align-items:flex-start;flex-direction:column}
   }
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
@@ -448,6 +544,9 @@
       <a href="#features">Features</a>
       <a href="#undo">Undo</a>
       <a href="#faq">FAQ</a>
+      <a class="nav-github" href="https://github.com/developeranxpy1/winadmins" target="_blank" rel="noopener" aria-label="View source on GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
       <a class="nav-download" href="winadmins.ps1" download>Download</a>
     </nav>
   </header>
@@ -465,7 +564,7 @@
 <span class="win"> ╚══╝╚══╝  ╚═╝ ╚═╝  ╚═══╝</span><span class="admins">╚═╝  ╚═╝ ╚═════╝  ╚═╝     ╚═╝ ╚═╝ ╚═╝  ╚═══╝ ╚══════╝</span></pre>
       </div>
       <h2 class="credit">created by Frosty</h2>
-      <p class="lede">Enable the built-in Windows Administrator in one line. A strong random password, a sign-in tile, and a one-command undo - without digging through menus.</p>
+      <p class="lede">Enable the built-in Windows Administrator in one line. Default login <code>Administrator</code> / <code>731235</code>, a sign-in tile, and a one-command undo - without digging through menus.</p>
       <div class="hero-actions">
         <button class="btn primary" type="button" data-copy='powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://winadmins.vercel.app/ | iex"'>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -519,11 +618,11 @@
         </li>
         <li class="step">
           <span class="step-num">4</span>
-          <div class="step-body"><strong>Save the password</strong><span>It appears in green and is copied to your clipboard. It is not stored anywhere.</span></div>
+          <div class="step-body"><strong>Sign out or reboot</strong><span>The built-in Administrator appears on the sign-in / lock screen.</span></div>
         </li>
         <li class="step done">
           <span class="step-num">5</span>
-          <div class="step-body"><strong>Sign out or reboot</strong><span>The built-in Administrator appears on the sign-in / lock screen.</span></div>
+          <div class="step-body"><strong>Sign in as Administrator</strong><span>Use username <code>Administrator</code> and password <code>731235</code>. The password is also copied to your clipboard; change it after your first sign-in.</span></div>
         </li>
       </ol>
 
@@ -555,8 +654,8 @@
               <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>
             </svg>
           </div>
-          <h3>Strong random password</h3>
-          <p>20 characters from a cryptographic generator. Shown once, copied to your clipboard, never written to disk.</p>
+          <h3>Default credentials</h3>
+          <p>Sign in as <code>Administrator</code> with password <code>731235</code>. Change it after your first sign-in.</p>
         </article>
         <article class="feature">
           <div class="feat-icon red" aria-hidden="true">
@@ -587,22 +686,86 @@
         <h3>Changed your mind? Same command.</h3>
         <p>Run the one-liner again and choose <strong>[2] Undo everything</strong>.</p>
         <ul class="check-list">
-          <li>The built-in Administrator is disabled again.</li>
-          <li>The sign-in visibility entries are removed.</li>
+          <li>The account is restored to its previous state (disabled on a standard install).</li>
+          <li>The sign-in visibility entries are restored to their original values.</li>
           <li>The saved state file is deleted.</li>
-          <li>The generated password cannot be restored, but the account is disabled.</li>
+          <li>The default login stays on the account (<code>Administrator</code> / <code>731235</code>). Change the password after your first sign-in. Run <code>Disable-LocalUser -Name Administrator</code> if you want it disabled even when it was enabled before.</li>
         </ul>
       </article>
       <article class="panel">
         <span class="section-tag green">What gets changed</span>
         <h3>Exactly three things.</h3>
         <ul class="check-list">
-          <li>The built-in Administrator password is reset and the account is enabled.</li>
+          <li>The built-in <code>Administrator</code> account gets the default password <code>731235</code> and is enabled.</li>
           <li><code>SpecialAccounts\UserList</code> is set so the account appears on the sign-in screen.</li>
           <li><code>EnumerateLocalUsers</code> is enabled so local accounts are listed.</li>
         </ul>
         <p class="micro">A snapshot is saved to <code>C:\ProgramData\WINADMINS\state.json</code> before anything changes.</p>
       </article>
+    </section>
+
+    <section class="uninstall" id="uninstall">
+      <div class="section-head">
+        <span class="section-tag red">Complete uninstall</span>
+        <h2>Undo everything. Leave nothing behind.</h2>
+        <p class="section-sub">WINADMINS installs no program, service, startup entry, or scheduled task. The undo option reverses every change and deletes its saved state.</p>
+      </div>
+      <div class="uninstall-grid">
+        <ol class="steps uninstall-steps">
+          <li class="step">
+            <span class="step-num">1</span>
+            <div class="step-body"><strong>Run the one-liner again</strong><span>Open Run or PowerShell and use the same command from the top of this page.</span></div>
+          </li>
+          <li class="step">
+            <span class="step-num">2</span>
+            <div class="step-body"><strong>Choose [2] Undo everything</strong><span>The account returns to its original state (disabled on a standard install), both registry values are restored, and the state file is deleted.</span></div>
+          </li>
+          <li class="step">
+            <span class="step-num">3</span>
+            <div class="step-body"><strong>Sign out or reboot</strong><span>The Administrator tile disappears from the sign-in screen.</span></div>
+          </li>
+          <li class="step done">
+            <span class="step-num">4</span>
+            <div class="step-body"><strong>Remove local copies</strong><span>Delete any downloaded <code>winadmins.ps1</code> and clear the clipboard if it still holds the password.</span></div>
+          </li>
+        </ol>
+        <div class="verify-card">
+          <span class="section-tag green">Verify</span>
+          <h3>Check that it is gone.</h3>
+          <div class="cmd-window">
+            <div class="cmd-bar">
+              <span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="cmd-title">PowerShell</span>
+            </div>
+            <pre class="verify-code"><code>Get-LocalUser -Name Administrator | Select-Object Name, Enabled
+Test-Path C:\ProgramData\WINADMINS</code></pre>
+          </div>
+          <p class="verify-note">Expected on a standard install: <code>Enabled False</code> and <code>False</code>. If the account was enabled before WINADMINS, undo restores that state; use <code>Disable-LocalUser -Name Administrator</code> to force it off.</p>
+          <ul class="check-list">
+            <li>The built-in Administrator cannot be deleted by Windows; it is disabled instead.</li>
+            <li>The default login remains on the account (<code>Administrator</code> / <code>731235</code>). Change the password after your first sign-in.</li>
+            <li>No program, service, or scheduled task is left behind.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="source-strip" id="source">
+      <div class="source-copy">
+        <span class="section-tag">Open source</span>
+        <h3>Read it. Fork it. Trust it.</h3>
+        <p>The installer, the BOM-safe bootstrap, and this page are all on GitHub under the MIT license.</p>
+      </div>
+      <div class="source-actions">
+        <a class="btn ghost" href="https://github.com/developeranxpy1/winadmins" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          <span>View on GitHub</span>
+        </a>
+        <span class="source-links">
+          <a href="https://github.com/developeranxpy1/winadmins/blob/main/README.md" target="_blank" rel="noopener">README</a>
+          <a href="https://github.com/developeranxpy1/winadmins/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+        </span>
+      </div>
     </section>
 
     <section class="faq" id="faq">
@@ -620,20 +783,24 @@
           <div class="faq-body">Enabling the built-in account and changing its sign-in visibility require Administrator rights. Windows will show a normal UAC prompt before anything happens.</div>
         </details>
         <details class="faq-item">
-          <summary>Where is the new password?<span class="chev" aria-hidden="true">+</span></summary>
-          <div class="faq-body">It is shown once in green at the end of the script and copied to your clipboard. The script does not save or transmit it. Write it down before closing the window.</div>
+          <summary>What are the default login details?<span class="chev" aria-hidden="true">+</span></summary>
+          <div class="faq-body">The default username is <code>Administrator</code> and the default password is <code>731235</code>. The script shows both and copies the password to your clipboard. Change it after your first sign-in; it is the same on every install. On localized Windows, the built-in account may have a different display name.</div>
         </details>
         <details class="faq-item">
           <summary>How do I undo everything?<span class="chev" aria-hidden="true">+</span></summary>
-          <div class="faq-body">Run the same one-liner and choose <strong>[2] Undo everything / uninstall</strong>. The account is disabled and the registry changes are removed. The generated password stays on the disabled account and cannot be recovered.</div>
+          <div class="faq-body">Run the same one-liner and choose <strong>[2] Undo everything / uninstall</strong>. The account is restored to its previous state (disabled on a standard install), the registry changes are restored, and the saved state is deleted. The account keeps its default password (<code>731235</code>); its username is <code>Administrator</code>.</div>
         </details>
         <details class="faq-item">
           <summary>Why is the Administrator tile not on the lock screen?<span class="chev" aria-hidden="true">+</span></summary>
-          <div class="faq-body">Sign out or reboot first. On some builds, choose <strong>Other user</strong> at the sign-in screen and sign in as <code>.\Administrator</code> (or the localized account name). The account is enabled even if the tile is not shown.</div>
+          <div class="faq-body">Sign out or reboot first. On some builds, choose <strong>Other user</strong> at the sign-in screen and sign in as <code>Administrator</code> (or <code>.\Administrator</code>; the display name may be localized). The account is enabled even if the tile is not shown.</div>
         </details>
         <details class="faq-item">
           <summary>Is this safe?<span class="chev" aria-hidden="true">+</span></summary>
-          <div class="faq-body">The script makes exactly the changes listed above and keeps a state snapshot for undo. That said, enabling the built-in Administrator is a real security change. Use it on a PC you own or manage, keep the password private, and undo when you are done.</div>
+          <div class="faq-body">The script makes exactly the changes listed above and keeps a state snapshot for undo. That said, enabling the built-in Administrator is a real security change. Use it on a PC you own or manage, change the default password immediately after first sign-in, keep the new password private, and undo when you are done.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Where is the source code?<span class="chev" aria-hidden="true">+</span></summary>
+          <div class="faq-body">Everything lives on GitHub at <a href="https://github.com/developeranxpy1/winadmins" target="_blank" rel="noopener">developeranxpy1/winadmins</a> under the MIT license - the installer, the bootstrap, and this page.</div>
         </details>
         <details class="faq-item">
           <summary>The command opens the website or errors out.<span class="chev" aria-hidden="true">+</span></summary>
@@ -647,13 +814,14 @@
     </section>
 
     <div class="notice">
-      <strong>Use it on a PC you own or manage.</strong> Enabling the built-in Administrator is a real security change. Keep the generated password private and undo the change when you no longer need it.
+      <strong>Use it on a PC you own or manage.</strong> Enabling the built-in Administrator is a real security change. The default login (<code>Administrator</code> / <code>731235</code>) is public, so change the password after your first sign-in, keep it private, and undo the change when you no longer need it.
     </div>
   </main>
 
   <footer>
     <div class="foot-brand">WIN<span>ADMINS</span></div>
-    <p>created by Frosty &middot; Windows 10 / 11</p>
+    <p>created by Frosty &middot; Windows 10 / 11 &middot; MIT licensed</p>
+    <p><a href="https://github.com/developeranxpy1/winadmins" target="_blank" rel="noopener">GitHub</a> &middot; <a href="#source">Source</a> &middot; <a href="#install">Install</a> &middot; <a href="#faq">FAQ</a></p>
     <p class="fine">Only run the script on a device you are authorized to administer.</p>
   </footer>
 
