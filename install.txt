@@ -1,0 +1,38 @@
+$ErrorActionPreference = 'Stop'
+
+function Get-RemoteSource {
+    param([string]$Uri)
+
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    $response = Invoke-WebRequest -UseBasicParsing -Uri $Uri
+
+    if ($response.Content -is [byte[]]) {
+        $text = [System.Text.Encoding]::UTF8.GetString($response.Content)
+    }
+    else {
+        $text = [string]$response.Content
+    }
+
+    return $text.TrimStart([char]0xFEFF)
+}
+
+$sourceUrl = 'https://winadmins.vercel.app/winadmins.ps1'
+
+try {
+    $source = Get-RemoteSource -Uri $sourceUrl
+}
+catch {
+    Write-Host ''
+    Write-Host 'WINADMINS could not be downloaded.' -ForegroundColor Red
+    Write-Host $_.Exception.Message -ForegroundColor DarkYellow
+    Read-Host 'Press Enter to close' | Out-Null
+    return
+}
+
+$env:WINADMINS_PIPED = '1'
+try {
+    Invoke-Expression $source
+}
+finally {
+    Remove-Item Env:\WINADMINS_PIPED -ErrorAction SilentlyContinue
+}
